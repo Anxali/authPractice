@@ -1,12 +1,16 @@
 const express = require('express');
 const userModel = require('../models/user.model');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 
 
 router.post('/register',async (req,res)=>{
     const {username,password} = req.body;
 
     const newUser = await userModel.create({username,password});
+
+    const token = jwt.sign({}, process.env.JWT_SECRET);
+
     res.status(201).json({message:'User registered successfully', user: newUser});
 })
 
@@ -21,6 +25,7 @@ router.post('/login',async(req,res)=>{
         res.status(401).json({message:'Invalid credentials'});
     }
 })
+
 
 
 module.exports = router;
