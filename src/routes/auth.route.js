@@ -37,7 +37,7 @@ router.get('/user',async(req,res)=>{
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         //res.send(decoded);
 
-        const user = await userModel.findOne({_id: decoded.id});
+        const user = await userModel.findOne({_id: decoded.id}).select('-password -__v');
         res.status(200).json({message:"User data retrieved successfully", user});
 
     }catch(err){
