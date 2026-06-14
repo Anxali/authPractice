@@ -9,9 +9,9 @@ router.post('/register',async (req,res)=>{
 
     const newUser = await userModel.create({username,password});
 
-    const token = jwt.sign({}, process.env.JWT_SECRET);
+    const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET);
 
-    res.status(201).json({message:'User registered successfully', user: newUser});
+    res.status(201).json({message:'User registered successfully', user: newUser, token});
 })
 
 router.post('/login',async(req,res)=>{
@@ -23,6 +23,14 @@ router.post('/login',async(req,res)=>{
         res.status(200).json({message:'Login successful', user});
     }else{
         res.status(401).json({message:'Invalid credentials'});
+    }
+})
+
+router.get('/user',async(req,res)=>{
+    const {token} = req.body;
+
+    if(!token){
+        return res.status(401).json({message:"Unauthorized"});
     }
 })
 
