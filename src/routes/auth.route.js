@@ -33,8 +33,14 @@ router.get('/user',async(req,res)=>{
         return res.status(401).json({message:"Unauthorized"});
     }
 
-    try{const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    res.send(decoded);}catch(err){
+    try{
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        //res.send(decoded);
+
+        const user = await userModel.findOne({_id: decoded.id});
+        res.status(200).json({message:"User data retrieved successfully", user});
+
+    }catch(err){
         res.status(401).json({message:"Unauthorized"});
     }
 })
